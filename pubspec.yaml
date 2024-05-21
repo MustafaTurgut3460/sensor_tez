@@ -41,6 +41,9 @@ dependencies:
   tailwind_colors: ^0.3.1
   flutter_local_notifications: ^17.1.2
   carousel_slider: ^4.2.1
+  syncfusion_flutter_charts: ^25.2.5
+  http: ^1.2.1
+  lottie: ^3.1.2
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +71,7 @@ flutter:
       fonts:
         - asset: assets/fonts/Poppins-Medium.ttf
   assets:
+    - assets/animations/
     - assets/illustrations/
     - assets/icons/
 

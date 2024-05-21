@@ -3,7 +3,8 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:tailwind_colors/tailwind_colors.dart';
 
 class LightComponent extends StatefulWidget {
-  const LightComponent({super.key});
+  final dynamic data;
+  const LightComponent({super.key, required this.data});
 
   @override
   State<LightComponent> createState() => _LightComponentState();
@@ -23,16 +24,16 @@ class _LightComponentState extends State<LightComponent> {
             showLabels: false,
             showTicks: false,
             radiusFactor: 0.8,
-            maximum: 120,
+            maximum: 1000,
             axisLineStyle: const AxisLineStyle(
                 cornerStyle: CornerStyle.startCurve, thickness: 5),
-            annotations: const <GaugeAnnotation>[
+            annotations: <GaugeAnnotation>[
               GaugeAnnotation(
                   angle: 90,
                   widget: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text('56',
+                      Text(widget.data.toStringAsFixed(1),
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontStyle: FontStyle.italic,
@@ -57,13 +58,13 @@ class _LightComponentState extends State<LightComponent> {
               GaugeAnnotation(
                 angle: 54,
                 positionFactor: 1.1,
-                widget: Text('120', style: TextStyle(fontSize: 14)),
+                widget: Text('1000', style: TextStyle(fontSize: 14)),
               ),
               GaugeAnnotation(
                 angle: 90,
                 positionFactor: 1.3,
                 widget: Text(
-                  'Işık: 56 Lümen',
+                  'Işık: ${widget.data.toStringAsFixed(1)} Lümen',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 18,
@@ -71,9 +72,9 @@ class _LightComponentState extends State<LightComponent> {
                 ),
               ),
             ],
-            pointers: const <GaugePointer>[
+            pointers: <GaugePointer>[
               RangePointer(
-                value: 56,
+                value: double.parse(widget.data.toString()),
                 width: 18,
                 pointerOffset: -6,
                 cornerStyle: CornerStyle.bothCurve,
@@ -87,7 +88,7 @@ class _LightComponentState extends State<LightComponent> {
                 ]),
               ),
               MarkerPointer(
-                value: 56,
+                value: double.parse(widget.data.toString()),
                 color: Colors.white,
                 markerType: MarkerType.circle,
               ),

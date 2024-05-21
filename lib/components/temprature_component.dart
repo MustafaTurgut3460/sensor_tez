@@ -3,7 +3,9 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:tailwind_colors/tailwind_colors.dart';
 
 class TempratureComponent extends StatefulWidget {
-  const TempratureComponent({super.key});
+  final bool isCardView;
+  final dynamic data;
+  const TempratureComponent({super.key, required this.isCardView, required this.data});
 
   @override
   State<TempratureComponent> createState() => _TempratureComponentState();
@@ -21,44 +23,37 @@ class _TempratureComponentState extends State<TempratureComponent> {
       enableLoadingAnimation: true,
       axes: <RadialAxis>[
         RadialAxis(
-            minimum: -30,
-            maximum: 100,
-            interval: 20,
+            minimum: 0,
+            maximum: 1200,
+            interval: widget.isCardView ? 200 : 100,
             minorTicksPerInterval: 9,
             showAxisLine: false,
             radiusFactor: 0.9,
             labelOffset: 8,
             ranges: <GaugeRange>[
               GaugeRange(
-                  startValue: -30,
-                  endValue: 0,
-                  startWidth: 0.265,
-                  sizeUnit: GaugeSizeUnit.factor,
-                  endWidth: 0.265,
-                  color: const Color.fromRGBO(34, 144, 199, 0.75)),
-              GaugeRange(
                   startValue: 0,
-                  endValue: 30,
+                  endValue: 200,
                   startWidth: 0.265,
                   sizeUnit: GaugeSizeUnit.factor,
                   endWidth: 0.265,
                   color: const Color.fromRGBO(123, 199, 34, 0.75)),
               GaugeRange(
-                  startValue: 30,
-                  endValue: 50,
+                  startValue: 200,
+                  endValue: 800,
                   startWidth: 0.265,
                   sizeUnit: GaugeSizeUnit.factor,
                   endWidth: 0.265,
                   color: const Color.fromRGBO(238, 193, 34, 0.75)),
               GaugeRange(
-                  startValue: 50,
-                  endValue: 100,
+                  startValue: 800,
+                  endValue: 1200,
                   startWidth: 0.265,
                   sizeUnit: GaugeSizeUnit.factor,
                   endWidth: 0.265,
                   color: const Color.fromRGBO(238, 79, 34, 0.65)),
             ],
-            annotations: const <GaugeAnnotation>[
+            annotations: <GaugeAnnotation>[
               // GaugeAnnotation(
               //     angle: 90,
               //     positionFactor: 0.35,
@@ -69,17 +64,17 @@ class _TempratureComponentState extends State<TempratureComponent> {
                 angle: 90,
                 positionFactor: 1.2,
                 widget: Text(
-                  'Sıcaklık: 22.5 C',
+                  'Hava Kalitesi: ${widget.data.toString()} ppm',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
-                    fontSize: 18,
+                    fontSize: 16,
                   ),
                 ),
               )
             ],
-            pointers: const <GaugePointer>[
+            pointers: <GaugePointer>[
               NeedlePointer(
-                value: 22.5,
+                value: double.parse(widget.data.toString()),
                 needleStartWidth: 1,
                 needleEndWidth: 8,
                 animationType: AnimationType.easeOutBack,

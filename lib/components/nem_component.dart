@@ -3,7 +3,8 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:tailwind_colors/tailwind_colors.dart';
 
 class NemComponent extends StatefulWidget {
-  const NemComponent({super.key});
+  final dynamic data;
+  const NemComponent({super.key, required this.data});
 
   @override
   State<NemComponent> createState() => _NemComponentState();
@@ -37,10 +38,10 @@ class _NemComponentState extends State<NemComponent> {
           interval: 10,
           axisLabelStyle: const GaugeTextStyle(),
           useRangeColorForAxis: true,
-          pointers: const <GaugePointer>[
+          pointers: <GaugePointer>[
             NeedlePointer(
                 enableAnimation: true,
-                value: 70,
+                value: double.parse(widget.data.toStringAsFixed(2)),
                 tailStyle: TailStyle(length: 0.2, width: 3),
                 needleEndWidth: 3,
                 needleLength: 0.6,
@@ -48,7 +49,7 @@ class _NemComponentState extends State<NemComponent> {
           ],
           ranges: <GaugeRange>[
             GaugeRange(
-                startValue: 30,
+                startValue: 40,
                 endValue: 100,
                 startWidth: 0.05,
                 gradient: const SweepGradient(
@@ -59,7 +60,7 @@ class _NemComponentState extends State<NemComponent> {
                 endWidth: 0.2,
                 sizeUnit: GaugeSizeUnit.factor)
           ],
-          annotations: const <GaugeAnnotation>[
+          annotations: <GaugeAnnotation>[
             // GaugeAnnotation(
             //     angle: 90,
             //     positionFactor: 0.35,
@@ -70,7 +71,7 @@ class _NemComponentState extends State<NemComponent> {
               angle: 90,
               positionFactor: 1.2,
               widget: Text(
-                'Nem: %70',
+                'Nem: %${widget.data.toStringAsFixed(1)}',
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 18,
