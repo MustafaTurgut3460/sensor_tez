@@ -67,13 +67,13 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-  // getData() {
-  //   http.get(Uri.parse("http://192.168.12.144/get-data")).then((res) => {
-  //         setState(() {
-  //           data = jsonDecode(res.body);
-  //         }),
-  //       });
-  // }
+  getData() {
+    http.get(Uri.parse("http://172.20.10.3/get-data")).then((res) => {
+          setState(() {
+            data = jsonDecode(res.body);
+          }),
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
