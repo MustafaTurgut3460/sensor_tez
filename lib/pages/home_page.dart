@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
@@ -22,13 +23,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Timer _timer;
   bool isFullMode = false;
   dynamic data = {
     "temperature": 0,
     "air_quality": 0,
     "humidity": 0,
     "light": 0,
-    "volt": 0,
+    "watt": 0,
   };
 
   final graphItems = [
@@ -50,7 +52,7 @@ class _HomePageState extends State<HomePage> {
     },
     {
       "id": "4",
-      "name": "volt",
+      "name": "watt",
     }
   ];
 
@@ -58,15 +60,14 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // _timer = Timer.periodic(Duration(seconds: 3), (timer) {
-    //   getData();
-    // });
-
-    writeData(data);
+    _timer = Timer.periodic(Duration(seconds: 3), (timer) {
+      getData();
+    });
   }
 
   @override
   void dispose() {
+    _timer.cancel();
     super.dispose();
   }
 
@@ -84,6 +85,7 @@ class _HomePageState extends State<HomePage> {
     await StorageService.saveIntData(data["air_quality"], "air_quality");
     await StorageService.saveIntData(data["humidity"], "humidity");
     await StorageService.saveIntData(data["light"], "light");
+    await StorageService.saveIntData(data["watt"], "watt");
   }
 
   @override
@@ -260,7 +262,7 @@ class _HomePageState extends State<HomePage> {
                                       MediaQuery.of(context).size.width / 2 +
                                           10,
                                   child: VoltComponent(
-                                    data: data["volt"],
+                                    data: data["watt"],
                                   ),
                                 ),
                               ],
@@ -293,9 +295,9 @@ class _HomePageState extends State<HomePage> {
           data: data["air_quality"],
         );
 
-      case "volt":
+      case "watt":
         return VoltComponent(
-          data: data["volt"],
+          data: data["watt"],
         );
       default:
         return TempratureComponent(
