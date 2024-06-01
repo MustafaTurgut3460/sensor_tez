@@ -2,7 +2,6 @@ import 'package:flashy_tab_bar2/flashy_tab_bar2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sensor_tez/constants/colors.dart';
-import 'package:sensor_tez/pages/graphs_page.dart';
 import 'package:sensor_tez/pages/home_page.dart';
 import 'package:sensor_tez/pages/notification_page.dart';
 import 'package:tailwind_colors/tailwind_colors.dart';
@@ -19,7 +18,6 @@ class _MainPageState extends State<MainPage> {
 
   final List<Widget> pages = [
     const HomePage(),
-    const GraphsPage(),
     const NotificationPage(),
   ];
 
@@ -49,13 +47,6 @@ class _MainPageState extends State<MainPage> {
               color: TW3Colors.gray.shade400,
             ),
             title: const Text("Ana Sayfa"),
-            activeColor: CustomColors.primary),
-        FlashyTabBarItem(
-            icon: SvgPicture.asset(
-              'assets/icons/graph.svg',
-              color: TW3Colors.gray.shade400,
-            ),
-            title: const Text("Grafikler"),
             activeColor: CustomColors.primary),
         FlashyTabBarItem(
             icon: SvgPicture.asset(

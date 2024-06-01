@@ -13,9 +13,6 @@ class AirComponent extends StatefulWidget {
 }
 
 class _AirComponentState extends State<AirComponent> {
-  late Timer _timer;
-  // int _value = 0;
-
   @override
   Widget build(BuildContext context) {
     return _buildWidgetPointerExample(context);
@@ -29,27 +26,8 @@ class _AirComponentState extends State<AirComponent> {
 
   @override
   void dispose() {
-    _timer.cancel();
     super.dispose();
   }
-
-  // void _startTimer() {
-  //   if (mounted) {
-  //     _timer = Timer.periodic(const Duration(milliseconds: 20), (Timer timer) {
-  //       _incrementPointerValue();
-  //     });
-  //   }
-  // }
-
-  // void _incrementPointerValue() {
-  //   setState(() {
-  //     if (_value == int.parse(widget.data)) {
-  //       _timer.cancel();
-  //     } else {
-  //       _value++;
-  //     }
-  //   });
-  // }
 
   SfRadialGauge _buildWidgetPointerExample(BuildContext context) {
     return SfRadialGauge(
@@ -68,7 +46,7 @@ class _AirComponentState extends State<AirComponent> {
           pointers: <GaugePointer>[
             WidgetPointer(
                 offset: -5,
-                value: widget.data,
+                value: double.parse(widget.data.toString()),
                 child: Container(
                   decoration: BoxDecoration(
                       color: Colors.white,

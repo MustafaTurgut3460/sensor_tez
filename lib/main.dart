@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:sensor_tez/helpers/notification_helper.dart';
+import 'package:sensor_tez/models/notification.dart';
 import 'package:sensor_tez/pages/main_page.dart';
+import 'package:sensor_tez/services/storage_service.dart';
 
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
@@ -14,6 +14,11 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 const AndroidNotificationChannel notificationChannel =
     AndroidNotificationChannel("deneme", "deneme123",
         description: "aciklama deneme");
+
+  const TEMPERATURE_MAX = -1;
+  const AIR_QUALITY = 200;
+  const HUMIDITY = 200;
+  const LIGHT = 200;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,18 +42,47 @@ void onStart(ServiceInstance service) {
     service.stopSelf();
   });
 
-  Timer.periodic(Duration(seconds: 10), (timer) {
-    flutterLocalNotificationsPlugin.show(
-        91,
-        "Denemeeee",
-        "Burası da deneme açıklama işte Zaman: ${DateTime.now()}",
-        const NotificationDetails(
-            android: AndroidNotificationDetails("deneme", "deneme123",
-                ongoing: false,
-                icon: "app_icon",
-                playSound: false,
-                importance: Importance.high)));
-  });
+  // Timer.periodic(const Duration(seconds: 10), (timer) async {
+  //   final temperature = await StorageService.getIntData("temperature");
+  //   final air_quality = await StorageService.getIntData("air_quality");
+  //   final humidity = await StorageService.getIntData("humidity");
+  //   final light = await StorageService.getIntData("light");
+
+  //   if(temperature > TEMPERATURE_MAX){
+  //     showNotification("Aykırı Sıcaklık Değeri", "Sıcaklık değeri normal değerin dışında: ${temperature}");
+  //     insertNotification(NotificationModel(title: "Aykırı Sıcaklık Değeri", body: "Sıcaklık değeri normal değerin dışında: ${temperature}", date: ""));
+  //   }
+  //   else if(air_quality > AIR_QUALITY){
+  //     showNotification("Aykırı Hava Kalite Değeri", "Hava kalite değeri normal değerin dışında: ${air_quality}");
+  //     insertNotification(NotificationModel(title: "Aykırı Hava Kalite Değeri", body: "Hava kalite değeri normal değerin dışında: ${air_quality}", date: ""));
+  //   }
+  //   else if(humidity > HUMIDITY){
+  //     showNotification("Aykırı Nem Değeri", "Nem değeri normal değerin dışında: ${humidity}");
+  //     insertNotification(NotificationModel(title: "Aykırı Nem Değeri", body: "Nem değeri normal değerin dışında: ${humidity}", date: ""));
+  //   }
+  //   else if(light > LIGHT){
+  //     showNotification("Aykırı Işık Değeri", "Işık değeri normal değerin dışında: ${light}");
+  //     insertNotification(NotificationModel(title: "Aykırı Işık Değeri", body: "Işık değeri normal değerin dışında: ${light}", date: ""));
+  //   }
+  // });
+}
+
+void showNotification(String title, String desc) {
+  flutterLocalNotificationsPlugin.show(
+    91,
+    title,
+    desc,
+    const NotificationDetails(
+      android: AndroidNotificationDetails(
+        "deneme",
+        "deneme123",
+        ongoing: false,
+        icon: "app_icon",
+        playSound: false,
+        importance: Importance.high,
+      ),
+    ),
+  );
 }
 
 Future<void> initializeService() async {

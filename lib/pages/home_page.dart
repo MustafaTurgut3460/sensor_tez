@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'dart:convert';
 
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -10,9 +8,9 @@ import 'package:sensor_tez/components/air_component.dart';
 import 'package:sensor_tez/components/light_component.dart';
 import 'package:sensor_tez/components/nem_component.dart';
 import 'package:sensor_tez/components/temprature_component.dart';
-import 'package:sensor_tez/helpers/notification_helper.dart';
-import 'package:sensor_tez/pages/main_page.dart';
-import 'package:sensor_tez/services/notification_service.dart';
+import 'package:sensor_tez/components/volt_component.dart';
+import 'package:sensor_tez/models/notification.dart';
+import 'package:sensor_tez/services/storage_service.dart';
 import 'package:tailwind_colors/tailwind_colors.dart';
 import 'package:http/http.dart' as http;
 
@@ -24,13 +22,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Timer? _timer;
   bool isFullMode = false;
   dynamic data = {
     "temperature": 0,
     "air_quality": 0,
     "humidity": 0,
     "light": 0,
+    "volt": 0,
   };
 
   final graphItems = [
@@ -49,6 +47,10 @@ class _HomePageState extends State<HomePage> {
     {
       "id": "4",
       "name": "hava",
+    },
+    {
+      "id": "4",
+      "name": "volt",
     }
   ];
 
@@ -59,11 +61,12 @@ class _HomePageState extends State<HomePage> {
     // _timer = Timer.periodic(Duration(seconds: 3), (timer) {
     //   getData();
     // });
+
+    writeData(data);
   }
 
   @override
   void dispose() {
-    _timer?.cancel(); // Timer'ı iptal et
     super.dispose();
   }
 
@@ -72,7 +75,15 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             data = jsonDecode(res.body);
           }),
+          writeData(res.body),
         });
+  }
+
+  void writeData(data) async {
+    await StorageService.saveIntData(data["temperature"], "temperature");
+    await StorageService.saveIntData(data["air_quality"], "air_quality");
+    await StorageService.saveIntData(data["humidity"], "humidity");
+    await StorageService.saveIntData(data["light"], "light");
   }
 
   @override
@@ -136,108 +147,126 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     height: 40,
                   ),
-                  // isFullMode
-                  //     ? CarouselSlider(
-                  //         options: CarouselOptions(height: 300.0),
-                  //         items: graphItems.map((i) {
-                  //           return Builder(
-                  //             builder: (BuildContext context) {
-                  //               return Container(
-                  //                 margin: EdgeInsets.symmetric(horizontal: 5.0),
-                  //                 decoration: BoxDecoration(
-                  //                   borderRadius: BorderRadius.circular(6),
-                  //                   color: Colors.white,
-                  //                 ),
-                  //                 padding: EdgeInsets.all(12),
-                  //                 child: getComponent(i["name"]!),
-                  //               );
-                  //             },
-                  //           );
-                  //         }).toList(),
-                  //       )
-                  //     : Column(
-                  //         children: [
-                  //           Row(
-                  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //             children: [
-                  //               Container(
-                  //                 decoration: BoxDecoration(
-                  //                   borderRadius: BorderRadius.circular(6),
-                  //                   color: Colors.white,
-                  //                 ),
-                  //                 padding: EdgeInsets.all(6),
-                  //                 width: MediaQuery.of(context).size.width / 2 -
-                  //                     20,
-                  //                 height:
-                  //                     MediaQuery.of(context).size.width / 2 +
-                  //                         10,
-                  //                 child: AirComponent(
-                  //                   data: data["temperature"],
-                  //                 ),
-                  //               ),
-                  //               Container(
-                  //                 decoration: BoxDecoration(
-                  //                   borderRadius: BorderRadius.circular(6),
-                  //                   color: Colors.white,
-                  //                 ),
-                  //                 padding: EdgeInsets.all(6),
-                  //                 width: MediaQuery.of(context).size.width / 2 -
-                  //                     20,
-                  //                 height:
-                  //                     MediaQuery.of(context).size.width / 2 +
-                  //                         10,
-                  //                 child: NemComponent(
-                  //                   data: data["humidity"],
-                  //                 ),
-                  //               ),
-                  //             ],
-                  //           ),
-                  //           SizedBox(
-                  //             height: 10,
-                  //           ),
-                  //           Row(
-                  //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //             children: [
-                  //               Container(
-                  //                 decoration: BoxDecoration(
-                  //                   borderRadius: BorderRadius.circular(6),
-                  //                   color: Colors.white,
-                  //                 ),
-                  //                 padding: EdgeInsets.all(6),
-                  //                 width: MediaQuery.of(context).size.width / 2 -
-                  //                     20,
-                  //                 height:
-                  //                     MediaQuery.of(context).size.width / 2 +
-                  //                         10,
-                  //                 child: LightComponent(
-                  //                   data: data["light"],
-                  //                 ),
-                  //               ),
-                  //               Container(
-                  //                 decoration: BoxDecoration(
-                  //                   borderRadius: BorderRadius.circular(6),
-                  //                   color: Colors.white,
-                  //                 ),
-                  //                 padding: EdgeInsets.all(6),
-                  //                 width: MediaQuery.of(context).size.width / 2 -
-                  //                     20,
-                  //                 height:
-                  //                     MediaQuery.of(context).size.width / 2 +
-                  //                         10,
-                  //                 child: TempratureComponent(
-                  //                   isCardView: !isFullMode,
-                  //                   data: data["air_quality"],
-                  //                 ),
-                  //               ),
-                  //             ],
-                  //           )
-                  //         ],
-                  //       ),
-
-                  InkWell(
-                    child: Text("Bildirim Gönder"),
-                    onTap: () async => {},
-                  )
+                  isFullMode
+                      ? CarouselSlider(
+                          options: CarouselOptions(height: 300.0),
+                          items: graphItems.map((i) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                return Container(
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: Colors.white,
+                                  ),
+                                  padding: EdgeInsets.all(12),
+                                  child: getComponent(i["name"]!),
+                                );
+                              },
+                            );
+                          }).toList(),
+                        )
+                      : Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: Colors.white,
+                                  ),
+                                  padding: EdgeInsets.all(6),
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      20,
+                                  height:
+                                      MediaQuery.of(context).size.width / 2 +
+                                          10,
+                                  child: AirComponent(
+                                    data: data["temperature"],
+                                  ),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: Colors.white,
+                                  ),
+                                  padding: EdgeInsets.all(6),
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      20,
+                                  height:
+                                      MediaQuery.of(context).size.width / 2 +
+                                          10,
+                                  child: NemComponent(
+                                    data: data["humidity"],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: Colors.white,
+                                  ),
+                                  padding: EdgeInsets.all(6),
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      20,
+                                  height:
+                                      MediaQuery.of(context).size.width / 2 +
+                                          10,
+                                  child: LightComponent(
+                                    data: data["light"],
+                                  ),
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: Colors.white,
+                                  ),
+                                  padding: EdgeInsets.all(6),
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      20,
+                                  height:
+                                      MediaQuery.of(context).size.width / 2 +
+                                          10,
+                                  child: TempratureComponent(
+                                    isCardView: !isFullMode,
+                                    data: data["air_quality"],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(6),
+                                    color: Colors.white,
+                                  ),
+                                  padding: EdgeInsets.all(6),
+                                  width: MediaQuery.of(context).size.width / 2 -
+                                      20,
+                                  height:
+                                      MediaQuery.of(context).size.width / 2 +
+                                          10,
+                                  child: VoltComponent(
+                                    data: data["volt"],
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                 ],
               ),
             ),
@@ -262,6 +291,11 @@ class _HomePageState extends State<HomePage> {
         return TempratureComponent(
           isCardView: !isFullMode,
           data: data["air_quality"],
+        );
+
+      case "volt":
+        return VoltComponent(
+          data: data["volt"],
         );
       default:
         return TempratureComponent(
