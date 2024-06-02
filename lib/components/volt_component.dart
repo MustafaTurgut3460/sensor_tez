@@ -42,7 +42,7 @@ class _VoltComponentState extends State<VoltComponent> {
           radiusFactor: 0.9,
           showTicks: false,
           showLastLabel: true,
-          maximum: 3000,
+          maximum: 6,
           axisLabelStyle: const GaugeTextStyle(),
           onCreateAxisRenderer: handleCreateAxisRenderer,
           annotations: <GaugeAnnotation>[
@@ -111,10 +111,11 @@ class _CustomAxisRenderer extends RadialAxisRenderer {
   @override
   List<CircularAxisLabel> generateVisibleLabels() {
     final List<CircularAxisLabel> visibleLabels = <CircularAxisLabel>[];
-    for (num i = 0; i <= 6; i++) {  // 7 label intervals for the range of 0 to 3000 with steps of 500
-      final double labelValue = i * 500;
+    // Burada 0, 1, 2, 3 olacak şekilde etiketleri ayarlıyoruz
+    for (num i = 0; i <= 6; i++) {
+      final double labelValue = double.parse(i.toString());  // Her adımda label değeri 1 artacak
       final CircularAxisLabel label = CircularAxisLabel(
-          axis.axisLabelStyle, labelValue.toInt().toString(), i, false);
+          axis.axisLabelStyle, labelValue.toString(), i, false);
       label.value = labelValue;
       visibleLabels.add(label);
     }
@@ -124,6 +125,7 @@ class _CustomAxisRenderer extends RadialAxisRenderer {
 
   @override
   double valueToFactor(double value) {
-    return value / 3000;  // Normalize the value over the range of 0 to 3000
+    return value / 6;  // Değer 0 ile 3 arasında normalleştirilecek
   }
 }
+
