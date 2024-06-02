@@ -72,12 +72,29 @@ class _HomePageState extends State<HomePage> {
   }
 
   getData() {
-    http.get(Uri.parse("http://172.20.10.3/get-data")).then((res) => {
-          setState(() {
-            data = jsonDecode(res.body);
-          }),
-          writeData(res.body),
-        });
+    // http.get(Uri.parse("http://172.20.10.3/get-data")).then((res) => {
+    //       setState(() {
+    //         data = jsonDecode(res.body);
+    //       }),
+    //       writeData(res.body),
+    //     });
+    setState(() {
+      data = {
+        "temperature": 24,
+        "air_quality": 345,
+        "humidity": 46,
+        "light": 500,
+        "watt": 1.7,
+      };
+    });
+
+    writeData({
+      "temperature": 0,
+      "air_quality": 0,
+      "humidity": 0,
+      "light": 0,
+      "watt": 0,
+    });
   }
 
   void writeData(data) async {
