@@ -15,12 +15,12 @@ const AndroidNotificationChannel notificationChannel =
     AndroidNotificationChannel("deneme", "deneme123",
         description: "aciklama deneme");
 
-  const TEMPERATURE_MAX = 25;
-  const TEMPERATURE_MIN = 18;
-  const AIR_QUALITY = 800;
-  const HUMIDITY_MAX = 60;
-  const HUMIDITY_MIN = 30;
-  const LIGHT = 100;
+const TEMPERATURE_MAX = 25;
+const TEMPERATURE_MIN = 18;
+const AIR_QUALITY = 800;
+const HUMIDITY_MAX = 60;
+const HUMIDITY_MIN = 30;
+const LIGHT = 100;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,35 +44,63 @@ void onStart(ServiceInstance service) {
     service.stopSelf();
   });
 
-  Timer.periodic(const Duration(seconds: 6), (timer) async {
-    final temperature = await StorageService.getIntData("temperature");
-    final air_quality = await StorageService.getIntData("air_quality");
-    final humidity = await StorageService.getIntData("humidity");
-    final light = await StorageService.getIntData("light");
+  Timer.periodic(const Duration(seconds: 3), (timer) async {
+    final temperature = double.parse(await StorageService.getStringData("temperature"));
+    final air_quality = double.parse(await StorageService.getStringData("air_quality"));
+    final humidity = double.parse(await StorageService.getStringData("humidity"));
+    final light = double.parse(await StorageService.getStringData("light"));
 
-    if(temperature > TEMPERATURE_MAX){
-      showNotification("Aykırı Sıcaklık Değeri", "Sıcaklık değeri normal değerin altında: ${temperature}");
-      insertNotification(NotificationModel(title: "Aykırı Sıcaklık Değeri", body: "Sıcaklık değeri normal değerin altında: ${temperature}. Isıtıcı çalıştırıldı.", date: ""));
+    print("Sıcaklık: ${temperature}");
+
+    if (temperature > TEMPERATURE_MAX) {
+      showNotification("Aykırı Sıcaklık Değeri",
+          "Sıcaklık değeri normal değerin üstünde: ${temperature}");
+      insertNotification(NotificationModel(
+          title: "Aykırı Sıcaklık Değeri",
+          body:
+              "Sıcaklık değeri normal değerin üstünde: ${temperature}. Isıtıcı çalıştırıldı.",
+          date: ""));
     }
-    if(temperature < TEMPERATURE_MIN){
-      showNotification("Aykırı Sıcaklık Değeri", "Sıcaklık değeri normal değerin üstünde: ${temperature}");
-      insertNotification(NotificationModel(title: "Aykırı Sıcaklık Değeri", body: "Sıcaklık değeri normal değerin dışında: ${temperature}. Fanlar çalıştırdı.", date: ""));
+    if (temperature < TEMPERATURE_MIN) {
+      showNotification("Aykırı Sıcaklık Değeri",
+          "Sıcaklık değeri normal değerin altında: ${temperature}");
+      insertNotification(NotificationModel(
+          title: "Aykırı Sıcaklık Değeri",
+          body:
+              "Sıcaklık değeri normal değerin altında: ${temperature}. Fanlar çalıştırdı.",
+          date: ""));
     }
-    else if(air_quality > AIR_QUALITY){
-      showNotification("Aykırı Hava Kalite Değeri", "Hava kalite değeri normal değerin dışında: ${air_quality}");
-      insertNotification(NotificationModel(title: "Aykırı Hava Kalite Değeri", body: "Hava kalite değeri normal değerin dışında: ${air_quality}", date: ""));
+    if (air_quality > AIR_QUALITY) {
+      showNotification("Aykırı Hava Kalite Değeri",
+          "Hava kalite değeri normal değerin dışında: ${air_quality}");
+      insertNotification(NotificationModel(
+          title: "Aykırı Hava Kalite Değeri",
+          body: "Hava kalite değeri normal değerin dışında: ${air_quality}",
+          date: ""));
     }
-    else if(humidity > HUMIDITY_MAX){
-      showNotification("Aykırı Nem Değeri", "Nem değeri normal değerin üstünde: ${humidity}");
-      insertNotification(NotificationModel(title: "Aykırı Nem Değeri", body: "Nem değeri normal değerin üstünde: ${humidity}", date: ""));
+    if (humidity > HUMIDITY_MAX) {
+      showNotification("Aykırı Nem Değeri",
+          "Nem değeri normal değerin üstünde: ${humidity}");
+      insertNotification(NotificationModel(
+          title: "Aykırı Nem Değeri",
+          body: "Nem değeri normal değerin üstünde: ${humidity}",
+          date: ""));
     }
-    else if(humidity < HUMIDITY_MIN){
-      showNotification("Aykırı Nem Değeri", "Nem değeri normal değerin altında: ${humidity}");
-      insertNotification(NotificationModel(title: "Aykırı Nem Değeri", body: "Nem değeri normal değerin altında: ${humidity}", date: ""));
+    if (humidity < HUMIDITY_MIN) {
+      showNotification("Aykırı Nem Değeri",
+          "Nem değeri normal değerin altında: ${humidity}");
+      insertNotification(NotificationModel(
+          title: "Aykırı Nem Değeri",
+          body: "Nem değeri normal değerin altında: ${humidity}",
+          date: ""));
     }
-    else if(light < LIGHT){
-      showNotification("Aykırı Işık Değeri", "Işık değeri normal değerin dışında: ${light}");
-      insertNotification(NotificationModel(title: "Aykırı Işık Değeri", body: "Işık değeri normal değerin dışında: ${light}", date: ""));
+    if (light < LIGHT) {
+      showNotification(
+          "Aykırı Işık Değeri", "Işık değeri normal değerin dışında: ${light}");
+      insertNotification(NotificationModel(
+          title: "Aykırı Işık Değeri",
+          body: "Işık değeri normal değerin dışında: ${light}",
+          date: ""));
     }
   });
 }

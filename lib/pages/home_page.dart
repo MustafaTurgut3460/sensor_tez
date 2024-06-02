@@ -81,11 +81,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   void writeData(data) async {
-    await StorageService.saveIntData(data["temperature"], "temperature");
-    await StorageService.saveIntData(data["air_quality"], "air_quality");
-    await StorageService.saveIntData(data["humidity"], "humidity");
-    await StorageService.saveIntData(data["light"], "light");
-    await StorageService.saveIntData(data["watt"], "watt");
+    await StorageService.saveStringData(data["temperature"].toString() , "temperature");
+    await StorageService.saveStringData(data["air_quality"].toString(), "air_quality");
+    await StorageService.saveStringData(data["humidity"].toString(), "humidity");
+    await StorageService.saveStringData(data["light"].toString(), "light");
+    await StorageService.saveStringData(data["watt"].toString(), "watt");
   }
 
   @override
