@@ -23,8 +23,7 @@ class DatabaseHelper {
   Future _createDB(Database db, int version) async {
     const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     const textType = 'TEXT NOT NULL';
-    const boolType = 'BOOLEAN NOT NULL';
-    const integerType = 'INTEGER NOT NULL';
+    const realType = 'REAL NOT NULL';
 
     await db.execute('''
 CREATE TABLE notifications (
@@ -34,6 +33,36 @@ CREATE TABLE notifications (
   date $textType
   )
 ''');
+
+    await db.execute('''
+CREATE TABLE sensor_data (
+  id $idType,
+  temperature $realType,
+  air_quality $realType,
+  humidity $realType,
+  light $realType,
+  watt $realType
+  )
+''');
+  }
+
+  Future<void> deleteOldestRecords(String tableName, int limit) async {
+    final db = await instance.database;
+    await db.delete(
+      tableName,
+      where: 'id IN (SELECT id FROM $tableName ORDER BY id ASC LIMIT ?)',
+      whereArgs: [limit],
+    );
+  }
+
+  Future<void> maintainTableSize(
+      String tableName, int maxSize, int deleteSize) async {
+    final db = await instance.database;
+    final count = Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM $tableName'));
+    if (count != null && count > maxSize) {
+      await deleteOldestRecords(tableName, deleteSize);
+    }
   }
 
   Future close() async {

@@ -11,6 +11,7 @@ import 'package:sensor_tez/components/nem_component.dart';
 import 'package:sensor_tez/components/temprature_component.dart';
 import 'package:sensor_tez/components/volt_component.dart';
 import 'package:sensor_tez/models/notification.dart';
+import 'package:sensor_tez/models/sensor_data.dart';
 import 'package:sensor_tez/services/storage_service.dart';
 import 'package:tailwind_colors/tailwind_colors.dart';
 import 'package:http/http.dart' as http;
@@ -72,37 +73,41 @@ class _HomePageState extends State<HomePage> {
   }
 
   getData() {
-    // http.get(Uri.parse("http://172.20.10.3/get-data")).then((res) => {
-    //       setState(() {
-    //         data = jsonDecode(res.body);
-    //       }),
-    //       writeData(res.body),
-    //     });
-    setState(() {
-      data = {
-        "temperature": 24,
-        "air_quality": 345,
-        "humidity": 46,
-        "light": 500,
-        "watt": 1.7,
-      };
-    });
+    http.get(Uri.parse("http://172.20.10.3/get-data")).then((res) => {
+          setState(() {
+            data = jsonDecode(res.body);
+          }),
+          writeData(res.body),
+        });
+    // setState(() {
+    //   data = {
+    //     "temperature": 29,
+    //     "air_quality": 345,
+    //     "humidity": 65,
+    //     "light": 500,
+    //     "watt": 1.7,
+    //   };
+    // });
 
-    writeData({
-      "temperature": 0,
-      "air_quality": 0,
-      "humidity": 0,
-      "light": 0,
-      "watt": 0,
-    });
+    // writeData({
+    //   "temperature": 29,
+    //   "air_quality": 345,
+    //   "humidity": 65,
+    //   "light": 500,
+    //   "watt": 1.7,
+    // });
   }
 
   void writeData(data) async {
-    await StorageService.saveStringData(data["temperature"].toString() , "temperature");
-    await StorageService.saveStringData(data["air_quality"].toString(), "air_quality");
-    await StorageService.saveStringData(data["humidity"].toString(), "humidity");
-    await StorageService.saveStringData(data["light"].toString(), "light");
-    await StorageService.saveStringData(data["watt"].toString(), "watt");
+    insertSensorData(
+      SensorData(
+        temperature: double.parse(data["temperature"].toString()),
+        air_quality: double.parse(data["air_quality"].toString()),
+        humidity: double.parse(data["humidity"].toString()),
+        light: double.parse(data["light"].toString()),
+        watt: double.parse(data["watt"].toString()),
+      ),
+    );
   }
 
   @override
